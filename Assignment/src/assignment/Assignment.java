@@ -51,19 +51,8 @@ public class Assignment extends TimerTask {
         //Duration program is allowed to run
         Time();
         
-        //Caller c = new Caller();
-        
-        /*//Set random CallID and Service Time via Caller class
-        c.setCallID();
-        c.setRServTime();*/
-        
         //Check if Server is empty
         if (SList.get(0).Server.isEmpty() == false){
-                     
-            /*if (y>0){
-                Q.add(c);
-                y--;
-            }*/
             
             Arrival();
             
@@ -119,31 +108,15 @@ public class Assignment extends TimerTask {
         //Add call directly into Server if Q and Server is empty (for the first run)
         else {
       
-            /*if(z > 0){
-                Server.add(c);
-                z--;
-            }*/
             Arrival();
                   
         }
         
+        //Print output every interval (1 sec)
         Printout();
-        /*//Print if there is any calls in the Server or Queue
-        if(Server.size() + Q.size() > 0){
-            printout();
-        }
-        
-        else{
-            
-            System.out.println("Done!");
-            System.exit(0);
-            
-        }*/
         
     }
     
-    
-    //int y = 3, z = 1;
     public void Arrival(){
         
        int chance;
@@ -160,20 +133,12 @@ public class Assignment extends TimerTask {
           
           if(SList.get(0).Server.isEmpty() == false){
               
-              /*if (y>0){
-                Q.add(c);
-                y--;
-              }*/
               Q.add(c);
               
           }
           
           else {
               
-              /*if(z > 0){
-                Server.add(c);
-                z--;
-              }*/
               SList.get(0).setAddCall(c);
               
           }
@@ -212,7 +177,7 @@ public class Assignment extends TimerTask {
         }
        
         else{
-           
+           //Show nothing if there is no Call in Server
            ServC = "";
            ServT= "";
            
