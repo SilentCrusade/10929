@@ -14,7 +14,7 @@ public class Assignment extends TimerTask {
     
     int counter = 7,
     //time = 60,        
-    time = rand.nextInt(301) + 300,       
+    time = rand.nextInt(301) + 300,    //Duration of program execution   
     initial = 0;
     
     public static void main(String[] args)  {
@@ -35,9 +35,9 @@ public class Assignment extends TimerTask {
             
             Server s = new Server();
             SList.add(s);
+            initial++;
            
         }
-        
         
     }
     
@@ -125,7 +125,8 @@ public class Assignment extends TimerTask {
        //Set random CallID and Service Time via Caller class
         c.setCallID();
         c.setRServTime();
-        
+       
+        //"Arrives call at an average of 20 calls/min
        chance = rand.nextInt(2);
        //chance = 1;
        
@@ -144,19 +145,19 @@ public class Assignment extends TimerTask {
           }
           
        }
-       
         
     }
     
     public void Time(){
        
+        //Counts down duration of program
         if (time != 0){
         
             time --;
             
         }
         else{
-            
+            //Exits program if time = 0
             System.out.println(":( The program has ran out of time to run");
             System.exit(0);
             
@@ -171,6 +172,7 @@ public class Assignment extends TimerTask {
        
         if (SList.get(0).Server.size() > 0){
           
+           //Assigns variables to current Call ID and corresponding Service Time
            ServC = SList.get(0).getCall().toString(); //CallID
            ServT = Integer.toString(SList.get(0).getCall().getServTime()); //Call Service Time
            
@@ -182,13 +184,15 @@ public class Assignment extends TimerTask {
            ServT= "";
            
         }
-       
+        
+        //Prints time, Call ID and Service Time that is being processed
         System.out.println("Time Remaining: " + time + " seconds");
         System.out.println("--------------------");
         System.out.println("Server: \n" + ServC + " | " + ServT);
         System.out.println("----------");
         System.out.println("Queue: ");
-       
+        
+        //Print calls present in the Queue
         if (Q.size() > 0){
            
             while(x < Q.size()){
