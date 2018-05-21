@@ -8,11 +8,12 @@ import java.util.TimerTask;
 
 public class Assignment extends TimerTask {
     
-    ArrayList<Caller> Server = new ArrayList<>();
+    ArrayList<Server> SList = new ArrayList<>();
     ArrayList<Caller> Q = new ArrayList<>();
     Random rand = new Random();
     
-    int counter = 7, 
+    int counter = 7,
+    //time = 60,        
     time = rand.nextInt(301) + 300,       
     initial = 0;
     
@@ -22,16 +23,31 @@ public class Assignment extends TimerTask {
        TimerTask task = new Assignment();
        Timer timer = new Timer();
        
-       
        //Change back to 1000 later
        timer.scheduleAtFixedRate(task,0,100);
        
       
     }
     
+    public void ServerNo(){
+        
+        if(initial == 0){
+            
+            Server s = new Server();
+            SList.add(s);
+           
+        }
+        
+        
+    }
+    
+    
     @Override
     public void run() {
-       
+        
+        //Add Servers
+        ServerNo();
+        
         //Duration program is allowed to run
         Time();
         
@@ -42,7 +58,7 @@ public class Assignment extends TimerTask {
         c.setRServTime();*/
         
         //Check if Server is empty
-        if (Server.isEmpty() == false){
+        if (SList.get(0).Server.isEmpty() == false){
                      
             /*if (y>0){
                 Q.add(c);
@@ -50,14 +66,14 @@ public class Assignment extends TimerTask {
             }*/
             
             Arrival();
-           
+            
             //Subtract Service Time for a max of 7 seconds
             if (counter > 0){
                
                 //Check if there is remainder Service Time
-                if(Server.get(0).getServTime() > 1){
+                if(SList.get(0).getCall().getServTime() > 1){
                     
-                    Server.get(0).setServTime();
+                    SList.get(0).getCall().setServTime();
                     counter--;
                     
                 }
@@ -66,10 +82,10 @@ public class Assignment extends TimerTask {
                 else{
                    
                     counter = 7;
-                    Server.remove(0);
+                    SList.get(0).setRemoveCall();
                     
                     if(Q.size() > 0){
-                        Server.add(Q.get(0));
+                        SList.get(0).setAddCall(Q.get(0));
                         Q.remove(0);
                     }
                     
@@ -80,10 +96,10 @@ public class Assignment extends TimerTask {
             //Remove call from Server and place in queue after 7 seconds
             else{
                 
-                Q.add(Server.get(0));
-                Server.remove(0);
+                Q.add(SList.get(0).getCall());
+                SList.get(0).setRemoveCall();
                 if(Q.size() > 0){
-                    Server.add(Q.get(0));
+                    SList.get(0).setAddCall(Q.get(0));
                     Q.remove(0);
                 }
                 counter = 7;
@@ -95,7 +111,7 @@ public class Assignment extends TimerTask {
         //Add call from Queue if Server is empty 
         else if (Q.size() > 0) {
           
-          Server.add(Q.get(0));
+          SList.get(0).setAddCall(Q.get(0));
           Q.remove(0);
            
         }
@@ -142,7 +158,7 @@ public class Assignment extends TimerTask {
        
        if (chance == 1){
           
-          if(Server.isEmpty() == false){
+          if(SList.get(0).Server.isEmpty() == false){
               
               /*if (y>0){
                 Q.add(c);
@@ -158,7 +174,7 @@ public class Assignment extends TimerTask {
                 Server.add(c);
                 z--;
               }*/
-              Server.add(c);
+              SList.get(0).setAddCall(c);
               
           }
           
@@ -188,10 +204,10 @@ public class Assignment extends TimerTask {
        int x = 0;
        String ServC, ServT;
        
-        if (Server.size() > 0){
+        if (SList.get(0).Server.size() > 0){
           
-           ServC = Server.get(0).toString();
-           ServT = Integer.toString(Server.get(0).getServTime());
+           ServC = SList.get(0).getCall().toString(); //CallID
+           ServT = Integer.toString(SList.get(0).getCall().getServTime()); //Call Service Time
            
         }
        
