@@ -6,6 +6,7 @@ public class Caller {
     Random rand = new Random();
     int CallID;
     int ServTime;
+    int TimeSlice;
     String Callname;
 
     public Caller() {
@@ -44,5 +45,20 @@ public class Caller {
         this.ServTime = ServTime - 1;  
     }
     
-}
+     //
+    public int getTimeSlice() {
+        return TimeSlice;
+    }
+    
+    //
+    public void runTimeSlice() {
+        this.TimeSlice = TimeSlice - 1;
+    }
 
+    //
+    public void resetTimeSlice() {
+        this.TimeSlice = 7; 
+    }
+
+    
+}
