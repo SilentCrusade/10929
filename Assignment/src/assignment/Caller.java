@@ -8,57 +8,54 @@ public class Caller {
     int ServTime;
     int TimeSlice;
     String Callname;
+    int attempts = 0;
 
     public Caller() {
-        this.CallID = CallID;
+        this.CallID = this.CallID;
     }
-    
-    //Overrides name of object to CallID
-    @Override
+
     public String toString() {
-        Callname = Integer.toString(CallID);
-        return Callname;
-     }
-    
-    //Assigns random CallID
+        this.Callname = Integer.toString(this.CallID);
+        return this.Callname;
+    }
+
     public void setCallID() {
-        this.CallID = rand.nextInt(5000) + 1000;
+        this.CallID = this.rand.nextInt(5000) + 1000;
     }
 
-    //Get CallID
     public int getCallID() {
-        return CallID;
+        return this.CallID;
     }
 
-    //Get Service Time
     public int getServTime() {
-        return ServTime;
+        return this.ServTime;
     }
 
-    //Assigns random Service Time
     public void setRServTime() {
-        this.ServTime = rand.nextInt(14) + 3;
+        this.ServTime = this.rand.nextInt(14) + 3;
     }
-    
-    //Decrements Service Time (When call is being processed)
-    public void setServTime() {  
-        this.ServTime = ServTime - 1;  
+
+    public void setServTime() {
+        --this.ServTime;
     }
-    
-     //
+
     public int getTimeSlice() {
-        return TimeSlice;
+        return this.TimeSlice;
     }
-    
-    //
+
     public void runTimeSlice() {
-        this.TimeSlice = TimeSlice - 1;
+        --this.TimeSlice;
     }
 
-    //
     public void resetTimeSlice() {
-        this.TimeSlice = 7; 
+        this.TimeSlice = 7;
     }
 
-    
+    public void setAttempts(){
+        this.attempts++;
+    }
+
+    public int getAttempts(){
+        return attempts;
+    }
 }
