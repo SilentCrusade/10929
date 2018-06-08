@@ -1,5 +1,5 @@
-
 package assignment;
+
 import java.util.Random;
 
 public class Caller {

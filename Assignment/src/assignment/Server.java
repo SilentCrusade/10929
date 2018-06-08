@@ -1,9 +1,7 @@
-
 package assignment;
 
 import java.util.ArrayList;
     
-
 public class Server{
    
     ArrayList<Caller> Server = new ArrayList<>();
