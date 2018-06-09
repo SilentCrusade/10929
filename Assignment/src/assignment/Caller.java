@@ -9,7 +9,7 @@ public class Caller {
     int TimeSlice;
     String Callname;
 
-    public Caller() {
+    public Caller() { //Caller class constructor
     }
     
     //Overrides name of object to CallID
@@ -44,17 +44,17 @@ public class Caller {
         this.ServTime--;  
     }
     
-     //
+    //Returns the time slice of a call
     public int getTimeSlice() {
         return TimeSlice;
     }
     
-    //
+    //Decrements the time slice
     public void runTimeSlice() {
         this.TimeSlice--;
     }
 
-    //
+    //Resets the time slice of a call
     public void resetTimeSlice() {
         this.TimeSlice = 7; 
     }

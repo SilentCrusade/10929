@@ -3,54 +3,49 @@ package assignment;
 import java.util.*;
 
 public class Assignment extends TimerTask {
-    ArrayList<Server> SList = new ArrayList<>();
-    ArrayList<Caller> Q = new ArrayList<>();
+    ArrayList<Server> SList = new ArrayList<>(); //Server List
+    ArrayList<Caller> Q = new ArrayList<>(); //Queue List
     Random rand = new Random();
     
-    public static int amount = 0;
-    int //amount = 0, //amount of servers
-    //time = 60,
-    time = rand.nextInt(301) + 300;    //Duration of program execution   
-    boolean initial = false;
+    public static int amount; //Amount of servers to be inputted by user
+    int time = rand.nextInt(301) + 300; //Random duration of program execution
+    boolean initial = false; //For servers to only be instantiated once
     
     public static void main(String[] args)  {
-        boolean valid = false;
+        boolean valid = false; //To be used for user validation
         
         Scanner sc = new Scanner(System.in);
         TimerTask task = new Assignment();
         Timer timer = new Timer();
         
         while (!valid){
-            System.out.print("Please specify the number of servers (1 - 99): ");
+            System.out.print("Please specify the number of servers (1 - 99): "); //Prompts user to enter a value
             
             try {
-                amount = sc.nextInt();
+                amount = sc.nextInt(); //Accepts user input
             }
-            catch (Exception e){
+            catch (Exception e){ //If user enters a value other than integers, a message is displayed
                 System.out.println("Invalid input. Try again.\n");
                 sc.next();
                 continue;
             }
             
-            if ((amount < 100)&&(amount > 0))
+            if ((amount < 100)&&(amount > 0)) //If user enters a value between 1 and 99, input is valid.
                 valid = true;
             
             else
                 System.out.println("Invalid amount of servers. Try again.\n");
         }
         System.out.println();
-        //Change back to 1000 later
-        timer.scheduleAtFixedRate(task,0,1000);
+        
+        timer.scheduleAtFixedRate(task,0,1000); //Autoruns program every 1000 millisecond or 1 second
        
     }
     
     public void ServerNo(){
         if(!initial){
             
-            //System.out.print("Specify amount of server: ");
-            //amount = sc.nextInt();
-        
-            for(int k = 0; k < amount; k++){
+            for(int counter = 0; counter < amount; counter++){ //Makes instances of servers
                 Server s = new Server();
                 SList.add(s);
             }
@@ -62,43 +57,44 @@ public class Assignment extends TimerTask {
     
     @Override
     public void run() {
-        //Add Servers
-        ServerNo();
         
-        //Duration program is allowed to run
-        Time();
+        ServerNo(); //Instantialise servers
+        
+        Time(); //Duration program is allowed to run
+        
         System.out.println("Event Log:");
-        Arrival();
-        for(int n = 0; n < SList.size(); n++){
+        
+        Arrival(); //Arrival of calls
+        
+        for(int counter = 0; counter < SList.size(); counter++){
             //Check if Server is empty
-            if (SList.get(n).Server.isEmpty() == false){
+            if (SList.get(counter).Server.isEmpty() == false){
 
                 //Subtract Service Time for a max of 7 seconds
-                if (SList.get(n).getCall().getTimeSlice() > 0){
+                if (SList.get(counter).getCall().getTimeSlice() > 0){
 
                     //Check if there is remainder Service Time
-                    if(SList.get(n).getCall().getServTime() > 1){
+                    if(SList.get(counter).getCall().getServTime() > 1){
 
-                        SList.get(n).getCall().setServTime();
-                        SList.get(n).getCall().runTimeSlice();
+                        SList.get(counter).getCall().setServTime(); //Decrements service time of a call by 1
+                        SList.get(counter).getCall().runTimeSlice(); //Decrements the time slice of a call by 1
 
                     }
 
                     //Remove Call from server when Service Time ends and retrieve new call
                     else{
                         
-                        System.out.println("ID " + SList.get(n).getCall() + " has completed in Server " + (n+1) + ".");
+                        System.out.println("ID " + SList.get(counter).getCall() + " has completed in Server " + (counter+1) + ".");
                         
-                        SList.get(n).setRemoveCall();
-                        SList.get(n).incCallCount();
+                        SList.get(counter).setRemoveCall(); //Removes a call from the server
+                        SList.get(counter).incCallCount(); //Increments the amount of calls processed by each server by 1
                         
                         if(Q.size() > 0){
-                            SList.get(n).setAddCall(Q.get(0));
-                            Q.remove(0);
+                            SList.get(counter).setAddCall(Q.get(0)); //Adds a call from queue if there is one
+                            Q.remove(0); //Removes a call from the front of the queue
+                            System.out.println("ID " + SList.get(counter).getCall() + " is assigned to Server " + (counter+1) + ".");
                         }
                         
-                        if (!SList.get(n).Server.isEmpty())
-                            System.out.println("ID " + SList.get(n).getCall() + " is assigned to Server " + (n+1) + ".");
                     }
 
                 }
@@ -106,17 +102,17 @@ public class Assignment extends TimerTask {
                 //Remove call from Server and place in queue after 7 seconds
                 else{
                     
-                    System.out.println("Time slice of ID " + SList.get(n).getCall() + " in Server " + (n+1) + " expired.");
+                    System.out.println("Time slice of ID " + SList.get(counter).getCall() + " in Server " + (counter+1) + " expired.");
                     
-                    Q.add(SList.get(n).getCall());
-                    SList.get(n).setRemoveCall();
+                    Q.add(SList.get(counter).getCall()); //Adds current call to the end of the queue
+                    SList.get(counter).setRemoveCall(); //Removes call from server
                     if(Q.size() > 0){
-                        SList.get(n).setAddCall(Q.get(0));
+                        SList.get(counter).setAddCall(Q.get(0));
                         Q.remove(0);
                         
-                        System.out.println("ID " + SList.get(n).getCall() + " is assigned to Server " + (n+1) + ".");
+                        System.out.println("ID " + SList.get(counter).getCall() + " is assigned to Server " + (counter+1) + ".");
                     }
-                    SList.get(n).getCall().resetTimeSlice();
+                    SList.get(counter).getCall().resetTimeSlice(); //Resets time slice of the requeued call
 
                 }
 
@@ -125,10 +121,10 @@ public class Assignment extends TimerTask {
             //Add call from Queue if Server is empty 
             else if (Q.size() > 0) {
 
-                SList.get(n).setAddCall(Q.get(0));
+                SList.get(counter).setAddCall(Q.get(0));
                 Q.remove(0);
                 
-                System.out.println("ID " + SList.get(n).getCall() + " is assigned to Server " + (n+1) + ".");
+                System.out.println("ID " + SList.get(counter).getCall() + " is assigned to Server " + (counter+1) + ".");
                 
             }
 
@@ -147,31 +143,31 @@ public class Assignment extends TimerTask {
        
         if (chance == 1){
             
-            Caller c = new Caller();
+            Caller c = new Caller(); //Instantiates a caller
       
             //Set random CallID and Service Time via Caller class
             c.setCallID();
             c.setRServTime();
             c.resetTimeSlice();
             
-            for(int m = 0; m < SList.size(); m++){
-                if(SList.get(m).Server.isEmpty()){
+            for(int counter = 0; counter < SList.size(); counter++){
+                if(SList.get(counter).Server.isEmpty()){ //Assigns the call straight to server if it's empty
                     
-                    SList.get(m).setAddCall(c);
-                    System.out.println("ID " + SList.get(m).getCall() + " is assigned to Server " + (m+1) + ".");
+                    SList.get(counter).setAddCall(c);
+                    System.out.println("ID " + SList.get(counter).getCall() + " is assigned to Server " + (counter+1) + ".");
                     assigned = true;
 
                 }
                 
                 //Check if Call ID has been assigned to a Server. If it is, exit from 'for' loop.
                 if (assigned)
-                    m = SList.size();
+                    counter = SList.size();
                 
             }
             
             if (!assigned){
                 System.out.println("ID " + c.getCallID() + " has been added to queue.");
-                Q.add(c);
+                Q.add(c); //Adds call to queue
             }
         
         }
@@ -191,8 +187,8 @@ public class Assignment extends TimerTask {
             System.out.println("The program has ran out of time to run.");
             
             System.out.println("Total calls proceessed by");
-            for(int count = 0; count < SList.size(); count++){
-                System.out.println("Server " + (count+1) + ": " + SList.get(count).getCallCount());
+            for(int counter = 0; counter < SList.size(); counter++){
+                System.out.println("Server " + (counter+1) + ": " + SList.get(counter).getCallCount());
             }
             
             System.exit(0);
@@ -211,15 +207,15 @@ public class Assignment extends TimerTask {
         System.out.println("-----------------------------------");
         System.out.println("|   Time Remaining: " + String.format("%03d", time) + " seconds   |");
         System.out.println("-----------------------------------");
-        System.out.println("|   SName   |  ID  | Time Left(s) |");
+        System.out.println("|  Server   |  ID  | Time Left(s) |");
         System.out.println("-----------------------------------");
         
-        for(int i = 0; i < SList.size(); i++){
-            if (SList.get(i).Server.size() > 0){
+        for(int counter = 0; counter < SList.size(); counter++){
+            if (SList.get(counter).Server.size() > 0){
 
                 //Assigns variables to current Call ID and corresponding Service Time
-                ServC = SList.get(i).getCall().toString(); //CallID
-                ServT = String.format("%02d", SList.get(i).getCall().getServTime());
+                ServC = SList.get(counter).getCall().toString(); //CallID
+                ServT = String.format("%02d", SList.get(counter).getCall().getServTime());
 
             }
 
@@ -230,7 +226,7 @@ public class Assignment extends TimerTask {
 
             }
                 
-            System.out.println("| Server " + String.format("%02d", i+1) + " | " + ServC + " |      " + ServT + "      |");
+            System.out.println("| Server " + String.format("%02d", counter+1) + " | " + ServC + " |      " + ServT + "      |");
                 
         }
         
