@@ -10,52 +10,62 @@ public class Caller {
     String Callname;
     int attempts = 0;
 
-    public Caller() {
-        this.CallID = this.CallID;
+    public Caller() { //Caller class constructor
     }
-
+    
+    //Overrides name of object to CallID
+    @Override
     public String toString() {
-        this.Callname = Integer.toString(this.CallID);
-        return this.Callname;
-    }
-
+        Callname = Integer.toString(CallID);
+        return Callname;
+     }
+    
+    //Assigns random CallID
     public void setCallID() {
-        this.CallID = this.rand.nextInt(5000) + 1000;
+        this.CallID = rand.nextInt(5000) + 1000;
     }
 
+    //Get CallID
     public int getCallID() {
-        return this.CallID;
+        return CallID;
     }
 
+    //Get Service Time
     public int getServTime() {
-        return this.ServTime;
+        return ServTime;
     }
 
+    //Assigns random Service Time
     public void setRServTime() {
-        this.ServTime = this.rand.nextInt(14) + 3;
+        this.ServTime = rand.nextInt(14) + 3;
     }
-
-    public void setServTime() {
-        --this.ServTime;
+    
+    //Decrements Service Time (When call is being processed)
+    public void setServTime() {  
+        this.ServTime--;  
     }
-
+    
+    //Returns the time slice of a call
     public int getTimeSlice() {
-        return this.TimeSlice;
+        return TimeSlice;
     }
-
+    
+    //Decrements the time slice
     public void runTimeSlice() {
-        --this.TimeSlice;
+        this.TimeSlice--;
     }
 
+    //Resets the time slice of a call
     public void resetTimeSlice() {
-        this.TimeSlice = 7;
+        this.TimeSlice = 7; 
     }
 
-    public void setAttempts(){
-        this.attempts++;
-    }
+    //Increments the number of attempts the call takes.
+    public void setAttempts(){ this.attempts++; }
 
+    //getter method to get the number of attempts of the call.
     public int getAttempts(){
         return attempts;
     }
 }
+
