@@ -10,7 +10,6 @@ public class Caller {
     String Callname;
 
     public Caller() {
-        this.CallID = CallID;
     }
     
     //Overrides name of object to CallID
@@ -42,7 +41,7 @@ public class Caller {
     
     //Decrements Service Time (When call is being processed)
     public void setServTime() {  
-        this.ServTime = ServTime - 1;  
+        this.ServTime--;  
     }
     
      //
@@ -52,7 +51,7 @@ public class Caller {
     
     //
     public void runTimeSlice() {
-        this.TimeSlice = TimeSlice - 1;
+        this.TimeSlice--;
     }
 
     //
@@ -60,5 +59,4 @@ public class Caller {
         this.TimeSlice = 7; 
     }
 
-    
 }

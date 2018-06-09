@@ -27,7 +27,7 @@ public class Assignment extends TimerTask {
                 amount = sc.nextInt();
             }
             catch (Exception e){
-                System.out.println("Invalid input. Try again.");
+                System.out.println("Invalid input. Try again.\n");
                 sc.next();
                 continue;
             }
@@ -36,8 +36,9 @@ public class Assignment extends TimerTask {
                 valid = true;
             
             else
-                System.out.println("Invalid amount of servers. Try again.");
+                System.out.println("Invalid amount of servers. Try again.\n");
         }
+        System.out.println();
         //Change back to 1000 later
         timer.scheduleAtFixedRate(task,0,1000);
        
@@ -66,6 +67,7 @@ public class Assignment extends TimerTask {
         
         //Duration program is allowed to run
         Time();
+        System.out.println("Event Log:");
         Arrival();
         for(int n = 0; n < SList.size(); n++){
             //Check if Server is empty
@@ -78,33 +80,41 @@ public class Assignment extends TimerTask {
                     if(SList.get(n).getCall().getServTime() > 1){
 
                         SList.get(n).getCall().setServTime();
-                        
                         SList.get(n).getCall().runTimeSlice();
 
                     }
 
                     //Remove Call from server when Service Time ends and retrieve new call
                     else{
-
+                        
+                        System.out.println("ID " + SList.get(n).getCall() + " has completed in Server " + (n+1) + ".");
+                        
                         SList.get(n).setRemoveCall();
-
+                        SList.get(n).incCallCount();
+                        
                         if(Q.size() > 0){
                             SList.get(n).setAddCall(Q.get(0));
                             Q.remove(0);
                         }
-
+                        
+                        if (!SList.get(n).Server.isEmpty())
+                            System.out.println("ID " + SList.get(n).getCall() + " is assigned to Server " + (n+1) + ".");
                     }
 
                 }
 
                 //Remove call from Server and place in queue after 7 seconds
                 else{
-
+                    
+                    System.out.println("Time slice of ID " + SList.get(n).getCall() + " in Server " + (n+1) + " expired.");
+                    
                     Q.add(SList.get(n).getCall());
                     SList.get(n).setRemoveCall();
                     if(Q.size() > 0){
                         SList.get(n).setAddCall(Q.get(0));
                         Q.remove(0);
+                        
+                        System.out.println("ID " + SList.get(n).getCall() + " is assigned to Server " + (n+1) + ".");
                     }
                     SList.get(n).getCall().resetTimeSlice();
 
@@ -117,7 +127,9 @@ public class Assignment extends TimerTask {
 
                 SList.get(n).setAddCall(Q.get(0));
                 Q.remove(0);
-
+                
+                System.out.println("ID " + SList.get(n).getCall() + " is assigned to Server " + (n+1) + ".");
+                
             }
 
         }
@@ -127,38 +139,42 @@ public class Assignment extends TimerTask {
     }
     
     public void Arrival(){
-        
-       int chance;
-       Caller c = new Caller();
+        boolean assigned = false;
+        int chance;
+       
+        //Arrives call at an average of 20 calls/min
+        chance = rand.nextInt(3);
+       
+        if (chance == 1){
+            
+            Caller c = new Caller();
       
-       //Set random CallID and Service Time via Caller class
-        c.setCallID();
-        c.setRServTime();
-        c.resetTimeSlice();
-       
-        //"Arrives call at an average of 20 calls/min
-       chance = rand.nextInt(3);
-       //chance = 1;
-       
-       if (chance == 1){
-          
+            //Set random CallID and Service Time via Caller class
+            c.setCallID();
+            c.setRServTime();
+            c.resetTimeSlice();
+            
             for(int m = 0; m < SList.size(); m++){
-                if(SList.get(m).Server.isEmpty() == false){
-
-                    Q.add(c);
-                    break;
-
-                }
-
-                else {
-
+                if(SList.get(m).Server.isEmpty()){
+                    
                     SList.get(m).setAddCall(c);
-                    break;
+                    System.out.println("ID " + SList.get(m).getCall() + " is assigned to Server " + (m+1) + ".");
+                    assigned = true;
 
                 }
+                
+                //Check if Call ID has been assigned to a Server. If it is, exit from 'for' loop.
+                if (assigned)
+                    m = SList.size();
+                
             }
-          
-       }
+            
+            if (!assigned){
+                System.out.println("ID " + c.getCallID() + " has been added to queue.");
+                Q.add(c);
+            }
+        
+        }
         
     }
     
@@ -172,7 +188,13 @@ public class Assignment extends TimerTask {
         }
         else{
             //Exits program if time = 0
-            System.out.println(":( The program has ran out of time to run");
+            System.out.println("The program has ran out of time to run.");
+            
+            System.out.println("Total calls proceessed by");
+            for(int count = 0; count < SList.size(); count++){
+                System.out.println("Server " + (count+1) + ": " + SList.get(count).getCallCount());
+            }
+            
             System.exit(0);
             
         }
@@ -181,16 +203,16 @@ public class Assignment extends TimerTask {
     
     public void Printout (){
        
-       int x = 0;
-       String ServC, ServT;
+        int x = 0;
+        String ServC, ServT;
        
         
-        
         //Prints time, Call ID and Service Time that is being processed
-        System.out.println("\nTime Remaining: " + time + " seconds");
-        System.out.println("----------------------------------");
-        System.out.println("|   Name    |  ID  | Time Left(s) |");
-        
+        System.out.println("-----------------------------------");
+        System.out.println("|   Time Remaining: " + String.format("%03d", time) + " seconds   |");
+        System.out.println("-----------------------------------");
+        System.out.println("|   SName   |  ID  | Time Left(s) |");
+        System.out.println("-----------------------------------");
         
         for(int i = 0; i < SList.size(); i++){
             if (SList.get(i).Server.size() > 0){
@@ -213,7 +235,7 @@ public class Assignment extends TimerTask {
         }
         
         
-        System.out.println("----------------------------------");
+        System.out.println("-----------------------------------");
         System.out.println("Queue: ");
         
         //Print calls present in the Queue
@@ -221,14 +243,15 @@ public class Assignment extends TimerTask {
            
             while(x < Q.size()){
 
-                System.out.println(Q.get(x) + " | " + Q.get(x).getServTime());
+                System.out.println(Q.get(x) + " | " + String.format("%02d", Q.get(x).getServTime()) + "s");
                 x++;
 
             }
+            System.out.println();
         }
         
         else
-            System.out.println("Empty");
+            System.out.println("Empty\n");
     }
     
 }
