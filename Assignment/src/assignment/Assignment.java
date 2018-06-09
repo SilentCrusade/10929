@@ -8,9 +8,11 @@ public class Assignment extends TimerTask {
     Random rand = new Random();
     
     public static int amount; //Amount of servers to be inputted by user
-    int time = rand.nextInt(301) + 300; //Random duration of program execution
+    int time = rand.nextInt(301) /*+ 300*/; //Random duration of program execution
     boolean initial = false; //For servers to only be instantiated once
-    
+    public static int calls_processed = 0, calls_count = 0, first_attempt = 0, second_attempt = 0, third_attempt = 0, lots_of_attempts = 0, attempt;
+
+
     public static void main(String[] args)  {
         boolean valid = false; //To be used for user validation
         
@@ -38,7 +40,7 @@ public class Assignment extends TimerTask {
         }
         System.out.println();
         
-        timer.scheduleAtFixedRate(task, 0, 1000); //Autoruns program every 1000 millisecond or 1 second
+        timer.scheduleAtFixedRate(task, 0, 100); //Auto-runs program every 1000 millisecond or 1 second
        
     }
     
@@ -58,14 +60,16 @@ public class Assignment extends TimerTask {
     @Override
     public void run() {
         
-        ServerNo(); //Instantialise servers
+        ServerNo(); //Instantiate servers
         
         Time(); //Duration program is allowed to run
         
         System.out.println("Event Log:");
         
         Arrival(); //Arrival of calls
-        
+
+        calls_count++;  //call count is incremented as a call arrives/generated.
+
         for(int counter = 0; counter < SList.size(); counter++){
             //Check if Server is empty
             if (!SList.get(counter).Server.isEmpty()){
@@ -85,7 +89,11 @@ public class Assignment extends TimerTask {
                     else{
                         
                         System.out.println("ID " + SList.get(counter).getCall() + " has completed in Server " + (counter+1) + ".");
-                        
+
+                        SList.get(counter).getCall().setAttempts(); //the number of attempts for call is incremented as it has attempted to undergo processing.
+                        attempt = (SList.get(counter)).getCall().getAttempts();
+                        AttemptLog();   //logs call's data regarding how many attempts it made or/and how many times it had to be requeued.
+
                         SList.get(counter).setRemoveCall(); //Removes a call from the server
                         SList.get(counter).incCallCount(); //Increments the amount of calls processed by each server by 1
                         
@@ -103,13 +111,15 @@ public class Assignment extends TimerTask {
                         if (SList.get(counter).getCall().getTimeSlice() == 0){
                             System.out.println("Time slice of ID " + SList.get(counter).getCall() + " in Server " + (counter+1) + " expired.");
 
+                            SList.get(counter).getCall().setAttempts(); //the number of attempts for call is incremented as it has attempted to undergo processing.
                             SList.get(counter).getCall().resetTimeSlice(); //Resets time slice of the call
+                            //attempt += (SList.get(counter)).getCall().getAttempts();
                             Q.add(SList.get(counter).getCall()); //Adds current call to the end of the queue
                             SList.get(counter).setRemoveCall(); //Removes call from server
+
                             if(Q.size() > 0){
                                 SList.get(counter).setAddCall(Q.get(0));
                                 Q.remove(0);
-
                                 System.out.println("ID " + SList.get(counter).getCall() + " is assigned to Server " + (counter+1) + ".");
                             }
                         }
@@ -124,12 +134,12 @@ public class Assignment extends TimerTask {
 
                 SList.get(counter).setAddCall(Q.get(0));
                 Q.remove(0);
-                
                 System.out.println("ID " + SList.get(counter).getCall() + " is assigned to Server " + (counter+1) + ".");
                 
             }
 
         }
+
         //Print output every interval (1 sec)
         Printout();
         
@@ -173,7 +183,10 @@ public class Assignment extends TimerTask {
             System.out.println("Total calls proceessed by");
             for(int counter = 0; counter < SList.size(); counter++){
                 System.out.println("Server " + (counter+1) + ": " + SList.get(counter).getCallCount());
+                calls_processed += SList.get(counter).getCallCount();
             }
+
+            Details();
             
             System.exit(0);
             
@@ -232,6 +245,43 @@ public class Assignment extends TimerTask {
         
         else
             System.out.println("Empty\n");
+    }
+
+    //Searches and logs the number of attempts or/and the number of times the calls had to be requeued.
+    public void AttemptLog() {
+        if(attempt == 1){
+            first_attempt++;    //if call took only one attempt then the number of calls
+            // that managed to process in one attempt (var first_attempt) will be incremented.
+        }
+        else if(attempt == 2){
+            second_attempt++;   //if call took two attempts then the number of calls
+            // that managed to process in two attempts after being enqueued once (var second_attempt) will be incremented.
+        }
+        else if(attempt == 3){
+            third_attempt++;    //if call took three attempts then the number of calls
+            // that managed to process in three attempts after being enqueued twice (var third_attempt) will be incremented.
+        }
+        else if (attempt > 3){
+            lots_of_attempts++; //if call took more than three attempts then the number of calls
+            // that managed to process in more than three attempts after being enqueued more than twice (var lots_of_attempts) will be incremented.
+        }
+    }
+
+    //prints details of the basic functionalities of the system.
+    public void Details() {
+        if (time == 0) {
+            System.out.println("\n------------------------------------------------------------------");
+            System.out.println("Full Details");
+            System.out.println("------------------------------------------------------------------");
+            System.out.println("The total number of calls processed by the system: " + calls_processed);
+            System.out.println("Average number of calls processed per minute: " + (calls_processed / 60.0));
+            System.out.println("The average arrival rate per minute: " + (double) (calls_count / 60));
+            System.out.println("The number of calls processed on the first attempt (one time): " + first_attempt);
+            System.out.println("The number of calls had to be requeued once (require 2 times) " + second_attempt);
+            System.out.println("The number of calls had to be requeued twice (3 times): " + third_attempt);
+            System.out.println("The number of calls had to be requeued more than twice (>3 times): " + lots_of_attempts);
+            System.out.print("------------------------------------------------------------------");
+        }
     }
     
 }
