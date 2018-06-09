@@ -8,6 +8,7 @@ public class Caller {
     int ServTime;
     int TimeSlice;
     String Callname;
+    int attempts = 0;
 
     public Caller() { //Caller class constructor
     }
@@ -59,4 +60,11 @@ public class Caller {
         this.TimeSlice = 7; 
     }
 
+    //Increments the number of attempts the call takes.
+    public void setAttempts(){ this.attempts++; }
+
+    //getter method to get the number of attempts of the call.
+    public int getAttempts(){
+        return attempts;
+    }
 }
