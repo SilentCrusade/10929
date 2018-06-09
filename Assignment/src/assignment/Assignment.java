@@ -38,7 +38,7 @@ public class Assignment extends TimerTask {
         }
         System.out.println();
         
-        timer.scheduleAtFixedRate(task, 0, 10); //Autoruns program every 1000 millisecond or 1 second
+        timer.scheduleAtFixedRate(task, 0, 1000); //Autoruns program every 1000 millisecond or 1 second
        
     }
     
