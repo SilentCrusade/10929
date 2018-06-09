@@ -8,7 +8,7 @@ public class Assignment extends TimerTask {
     Random rand = new Random();
     
     public static int amount; //Amount of servers to be inputted by user
-    int time = rand.nextInt(301) /*+ 300*/; //Random duration of program execution
+    int time = rand.nextInt(301) + 300; //Random duration of program execution
     boolean initial = false; //For servers to only be instantiated once
     public static int calls_processed = 0, calls_count = 0, first_attempt = 0, second_attempt = 0, third_attempt = 0, lots_of_attempts = 0, attempt;
 
@@ -40,7 +40,7 @@ public class Assignment extends TimerTask {
         }
         System.out.println();
         
-        timer.scheduleAtFixedRate(task, 0, 100); //Auto-runs program every 1000 millisecond or 1 second
+        timer.scheduleAtFixedRate(task, 0, 1000); //Auto-runs program every 1000 millisecond or 1 second
        
     }
     
