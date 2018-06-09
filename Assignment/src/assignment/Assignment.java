@@ -38,7 +38,7 @@ public class Assignment extends TimerTask {
         }
         System.out.println();
         
-        timer.scheduleAtFixedRate(task,0,1000); //Autoruns program every 1000 millisecond or 1 second
+        timer.scheduleAtFixedRate(task, 0, 10); //Autoruns program every 1000 millisecond or 1 second
        
     }
     
@@ -68,13 +68,13 @@ public class Assignment extends TimerTask {
         
         for(int counter = 0; counter < SList.size(); counter++){
             //Check if Server is empty
-            if (SList.get(counter).Server.isEmpty() == false){
+            if (!SList.get(counter).Server.isEmpty()){
 
                 //Subtract Service Time for a max of 7 seconds
                 if (SList.get(counter).getCall().getTimeSlice() > 0){
 
                     //Check if there is remainder Service Time
-                    if(SList.get(counter).getCall().getServTime() > 1){
+                    if (SList.get(counter).getCall().getServTime() > 1){
 
                         SList.get(counter).getCall().setServTime(); //Decrements service time of a call by 1
                         SList.get(counter).getCall().runTimeSlice(); //Decrements the time slice of a call by 1
@@ -96,26 +96,27 @@ public class Assignment extends TimerTask {
                         }
                         
                     }
-
-                }
-
-                //Remove call from Server and place in queue after 7 seconds
-                else{
                     
-                    System.out.println("Time slice of ID " + SList.get(counter).getCall() + " in Server " + (counter+1) + " expired.");
-                    
-                    Q.add(SList.get(counter).getCall()); //Adds current call to the end of the queue
-                    SList.get(counter).setRemoveCall(); //Removes call from server
-                    if(Q.size() > 0){
-                        SList.get(counter).setAddCall(Q.get(0));
-                        Q.remove(0);
+                    //Remove call from Server and place in queue after 7 seconds of call time slice
+                    if (!SList.get(counter).Server.isEmpty()){
                         
-                        System.out.println("ID " + SList.get(counter).getCall() + " is assigned to Server " + (counter+1) + ".");
+                        if (SList.get(counter).getCall().getTimeSlice() == 0){
+                            System.out.println("Time slice of ID " + SList.get(counter).getCall() + " in Server " + (counter+1) + " expired.");
+
+                            SList.get(counter).getCall().resetTimeSlice(); //Resets time slice of the call
+                            Q.add(SList.get(counter).getCall()); //Adds current call to the end of the queue
+                            SList.get(counter).setRemoveCall(); //Removes call from server
+                            if(Q.size() > 0){
+                                SList.get(counter).setAddCall(Q.get(0));
+                                Q.remove(0);
+
+                                System.out.println("ID " + SList.get(counter).getCall() + " is assigned to Server " + (counter+1) + ".");
+                            }
+                        }
+                        
                     }
-                    SList.get(counter).getCall().resetTimeSlice(); //Resets time slice of the requeued call
-
                 }
-
+                
             }
 
             //Add call from Queue if Server is empty 
@@ -135,7 +136,7 @@ public class Assignment extends TimerTask {
     }
     
     public void Arrival(){
-        boolean assigned = false;
+        
         int chance;
        
         //Arrives call at an average of 20 calls/min
@@ -150,25 +151,8 @@ public class Assignment extends TimerTask {
             c.setRServTime();
             c.resetTimeSlice();
             
-            for(int counter = 0; counter < SList.size(); counter++){
-                if(SList.get(counter).Server.isEmpty()){ //Assigns the call straight to server if it's empty
-                    
-                    SList.get(counter).setAddCall(c);
-                    System.out.println("ID " + SList.get(counter).getCall() + " is assigned to Server " + (counter+1) + ".");
-                    assigned = true;
-
-                }
-                
-                //Check if Call ID has been assigned to a Server. If it is, exit from 'for' loop.
-                if (assigned)
-                    counter = SList.size();
-                
-            }
-            
-            if (!assigned){
-                System.out.println("ID " + c.getCallID() + " has been added to queue.");
-                Q.add(c); //Adds call to queue
-            }
+            System.out.println("ID " + c.getCallID() + " has been added to queue.");
+            Q.add(c); //Adds call to queue
         
         }
         
