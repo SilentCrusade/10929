@@ -16,8 +16,8 @@ public class Caller {
     //Overrides name of object to CallID
     @Override
     public String toString() {
-        Callname = Integer.toString(CallID);
-        return Callname;
+        this.Callname = Integer.toString(CallID);
+        return this.Callname;
      }
     
     //Assigns random CallID
@@ -27,12 +27,12 @@ public class Caller {
 
     //Get CallID
     public int getCallID() {
-        return CallID;
+        return this.CallID;
     }
 
     //Get Service Time
     public int getServTime() {
-        return ServTime;
+        return this.ServTime;
     }
 
     //Assigns random Service Time
@@ -47,7 +47,7 @@ public class Caller {
     
     //Returns the time slice of a call
     public int getTimeSlice() {
-        return TimeSlice;
+        return this.TimeSlice;
     }
     
     //Decrements the time slice
@@ -61,10 +61,12 @@ public class Caller {
     }
 
     //Increments the number of attempts the call takes.
-    public void setAttempts(){ this.attempts++; }
+    public void setAttempts(){
+        this.attempts++;
+    }
 
     //getter method to get the number of attempts of the call.
     public int getAttempts(){
-        return attempts;
+        return this.attempts;
     }
 }

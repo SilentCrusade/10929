@@ -26,7 +26,7 @@ public class Server{
     }
     
     public void incCallCount() { //Increments the amount of calls processed by 1
-        this.CallCount++;
+        CallCount++;
     }
     
 }
