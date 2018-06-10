@@ -53,7 +53,7 @@ public class Assignment extends TimerTask {
         }
         System.out.println();
         
-        timer.scheduleAtFixedRate(task, 0, 1000); //Auto-runs program every 1000 millisecond or 1 second
+        timer.scheduleAtFixedRate(task, 0, 10); //Auto-runs program every 1000 millisecond or 1 second
        
     }
     
@@ -274,15 +274,15 @@ public class Assignment extends TimerTask {
     public void Details() {
         if (time == 0) {
             System.out.println("-------------------------------------------------------");
-            System.out.println("Full Details (Program Runtime: " + totaltime + " minutes)");
+            System.out.println("Full Details (Program Runtime: " + totaltime + " minute(s))");
             System.out.println("-------------------------------------------------------");
             
-            System.out.println("Total calls proceessed by");
+            System.out.println("Total calls processed by");
             for(int counter = 0; counter < SList.size(); counter++){
                 System.out.println("Server " + String.format("%02d",(counter+1)) + ": " + SList.get(counter).getCallCount());
                 calls_processed += SList.get(counter).getCallCount();
             }
-            
+            System.out.println("-------------------------------------------------------");
             System.out.println("The total number of calls processed by the system: " + calls_processed);
             System.out.println("Average number of calls processed per minute: " + String.format("%.03f", (double) calls_processed / totaltime));
             System.out.println("The average arrival rate per minute: " + String.format("%.03f", (double) calls_count / totaltime));
