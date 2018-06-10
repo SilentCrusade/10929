@@ -5,7 +5,6 @@ import java.util.*;
 public class Assignment extends TimerTask {
     ArrayList<Server> SList = new ArrayList<>(); //Server List
     ArrayList<Caller> Q = new ArrayList<>(); //Queue List
-    Random rand = new Random();
     
     public static int amount; //Amount of servers to be inputted by user
     public static int time, totaltime; //Duration of program
@@ -157,6 +156,7 @@ public class Assignment extends TimerTask {
     }
     
     public void Arrival(){
+        Random rand = new Random();
         
         int chance;
        
