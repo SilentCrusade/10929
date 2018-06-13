@@ -278,9 +278,9 @@ public class Assignment extends TimerTask {
             System.out.println("-------------------------------------------------------");
             
             System.out.println("Total calls processed by");
-            for(int counter = 0; counter < SList.size(); counter++){
+            for(int counter = 0; counter < SList.size(); counter++){ //Prints total calls processed by each server
                 System.out.println("Server " + String.format("%02d",(counter+1)) + ": " + SList.get(counter).getCallCount());
-                calls_processed += SList.get(counter).getCallCount();
+                calls_processed += SList.get(counter).getCallCount(); //Adds all the total calls processed
             }
             System.out.println("-------------------------------------------------------");
             System.out.println("The total number of calls processed by the system: " + calls_processed);
