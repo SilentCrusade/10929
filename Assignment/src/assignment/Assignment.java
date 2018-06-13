@@ -43,7 +43,7 @@ public class Assignment extends TimerTask {
             
             try {
                 totaltime = sc.nextInt(); //Accepts user input
-                time = totaltime * 60; //Converts minuntes to seconds for countdown
+                time = totaltime * 60; //Converts minutes to seconds for countdown
             }
             catch (Exception e){ //If user enters a value other than integers, a message is displayed
                 System.out.println("Invalid input. Try again.\n");
